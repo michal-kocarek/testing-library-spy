@@ -1,7 +1,9 @@
+import execa, { ExecaChildProcess } from "execa";
 import { resolve } from "path";
-import { ChildProcess, fork } from "child_process";
 
-let child: ChildProcess | undefined;
+// https://www.npmjs.com/package/debug for debugging
+
+let child: ExecaChildProcess | undefined;
 
 export function start(): void {
   if (child) {
@@ -13,11 +15,10 @@ export function start(): void {
   // TODO: Replace fork with spawn
   // TODO: Compile it from typescript to JS
 
-  const path = resolve(__dirname, "server/index");
-  child = fork(path, [], {
-    // TODO: make sure this gets propagated to parent process... If something goes wrong
-    stdio: ["pipe", "pipe", "pipe", "ipc"],
-  });
+  const SCRIPT_PATH = resolve(__dirname, "server/index");
+
+  // TODO: What if child exits prematurely!
+  child = execa.node(SCRIPT_PATH, {});
 
   console.log(
     "React Testing Live Playground available at http://localhost:3888/"

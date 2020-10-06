@@ -1,5 +1,8 @@
 {
   "XXX TODO:": "TODO: Vzit si priklad z https://github.com/testing-library/react-testing-library/blob/master/package.json",
+  "workspaces": [
+    "client"
+  ],
   "name": "testing-library-spy",
   "version": "0.0.0-semantically-released",
   "description": "Real-time spy on HTML rendered using Testing Library",
@@ -14,6 +17,7 @@
   "author": "Michal Kočárek <michal.kocarek@brainbox.cz>",
   "license": "MIT",
   "dependencies": {
+    "execa": "^4.0.3",
     "express": "^4.17.1",
     "http-status-codes": "^2.1.4"
   },

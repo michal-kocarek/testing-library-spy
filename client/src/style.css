@@ -1,0 +1,16 @@
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+  margin: 0;
+}
+
+/* TODO: Fix this */
+/* font-mono: Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace */
+
+#status {
+  position: sticky;
+  top: 0;
+  left: 0;
+  padding: 8px;
+  box-shadow: 0 0 2px #9c9c9c;
+  background: #edf2f7;
+}
