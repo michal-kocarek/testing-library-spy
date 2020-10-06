@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>React Testing Live Playground</title>
+  <!-- TODO: Inline these images, so we don't have to preload them -->
+  <link rel="preload" href="/favicon.png" as="image">
+  <link rel="preload" href="/favicon-offline.png" as="image">
+  <link rel="icon" type="image/png" href="/favicon-offline.png" data-online-href="/favicon.png" data-offline-href="/favicon-offline.png" />
+  <style type="text/css">
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+      margin: 0;
+    }
+
+    /* font-mono: Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace */
+
+    #status {
+      position: sticky;
+      top: 0;
+      left: 0;
+      padding: 8px;
+      box-shadow: 0 0 2px #9c9c9c;
+      background: #edf2f7;
+    }
+  </style>
+  <script>
+    const setStatus = (status) => {
+      document.getElementById('status').innerText = status;
+    }
+
+    const toggle = (online) => {
+      /**
+       * @type HTMLLinkElement
+       */
+      const link = document.querySelector('link[rel="icon"]');
+
+      const href = link.getAttribute(online ? 'data-online-href' : 'data-offline-href');
+      link.setAttribute('href', href);
+    }
+
+    /**
+     * @type {string | undefined}
+     */
+    let lastData;
+
+    /**
+     * @type {string}
+     */
+    const title = document.title;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const poll = async (nopoll = false) => {
+        toggle(true);
+
+        let response;
+        try {
+          response = await fetch('/data', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(nopoll ? {nopoll: true} : {}),
+          });
+        } catch (e) {
+          toggle(false);
+          setStatus('🛑 Disconnected!');
+
+          if (!(e instanceof TypeError)) {
+            console.error(e);
+          }
+
+          retryFail();
+          return;
+        }
+
+        if (!response.ok) {
+          toggle(false);
+          setStatus('🛑 Received non-OK response!');
+
+          console.error('Response not ok!');
+
+          retryFail();
+          return;
+        }
+
+        setStatus(`💡 Alive`);
+
+        const jsonResponse = await response.json();
+
+        if (jsonResponse.data) {
+          const {data} = jsonResponse;
+          if (lastData !== data) {
+            lastData = data;
+
+            const previousScript = document.getElementById('playground-script');
+            if (previousScript) {
+              previousScript.remove();
+            }
+
+            document.getElementById('markup').innerHTML = data;
+            document.getElementById('playground').innerHTML = `
+              <template data-testing-playground data-height="500">
+                <script type="text/html"><div>${data}</div><`+`/script>
+
+                <script type="text/javascript">screen.getByRole('button')<`+`/script>
+              </template>
+            `;
+
+            document.querySelector('head').appendChild((() => {
+              const script = document.createElement('script');
+              script.id = 'playground-script';
+              script.async = true;
+              script.src = 'https://testing-playground.com/embed.js';
+
+              return script;
+            })());
+          }
+        }
+
+        poll();
+      }
+
+      const retryFail = () => {
+        setTimeout(() => {
+          poll(true);
+        }, 5000);
+      }
+
+      poll(true);
+    })
+  </script>
+</head>
+<body>
+<div id="status">Loading...</div>
+<div id="markup" style="margin: 1em; padding: 1em; border: 1px dotted gray;"></div>
+<div id="playground"></div>
+</body>
+</html>
