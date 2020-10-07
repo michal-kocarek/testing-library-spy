@@ -1,10 +1,14 @@
-import {kill, send, start} from './subprocess';
-import {getConfig, configure, screen} from '@testing-library/react';
-import {url} from 'inspector';
+import { kill, send, start } from "./src/subprocess";
+import { getConfig, configure, screen } from "@testing-library/react";
+import { url } from "inspector";
 
 let isInitialized = false;
 let observer: MutationObserver | undefined;
-let oldValue = '';
+let oldValue = "";
+
+// TODO: Report more information, e.g. test name...
+// TODO: Can we report last executed query? .) E.g. if I reexport the library, then I could also provide render() method, and maybe some other stuff...
+// TODO: This needs to play well with DEBUG / non-DEBUG mode.
 
 const updateContents = () => {
   if (!isInitialized) {
@@ -21,7 +25,7 @@ const updateContents = () => {
 };
 
 const hookInTestingLibrary = () => {
-  const {asyncWrapper, eventWrapper} = getConfig();
+  const { asyncWrapper, eventWrapper } = getConfig();
   configure({
     asyncWrapper: async (...args) => {
       try {
@@ -50,7 +54,7 @@ const hookInTestingLibrary = () => {
 const hookToDom = () => {
   const window = document.defaultView;
   if (!window) {
-    throw new Error('Window should be initialized by JSDOM!');
+    throw new Error("Window should be initialized by JSDOM!");
   }
 
   const MutationObserverConstructor = window.MutationObserver;
@@ -64,12 +68,15 @@ const hookToDom = () => {
   });
 };
 
-const enable = () => !!(
-  // Enable by ENV variable?
-  process.env.LIVE_PLAYGROUND_ENABLE === 'true' ||
-  // Or when Node.js debugger is active?
-  url()
-);
+const enable = () =>
+  !!(
+    // Enable by ENV variable?
+    (
+      process.env.LIVE_PLAYGROUND_ENABLE === "true" ||
+      // Or when Node.js debugger is active?
+      url()
+    )
+  );
 
 // TODO: Rename this to something like testing-library-spy
 // TODO: Just dump out HTML nicely, with info about running test and connection status. And add link to download this package and the chrome extension
@@ -94,7 +101,11 @@ export const initPlayground = () => {
 
 // https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver
 
-// Can we replace this with some unref(), so Jest doesn't bother?
+// TODO: If we monkeypatch .debug(), can we then somehow stack what has been happening, to allow going back in time?
+
+// TODO: How to detect afterAll/afterEach? https://github.com/testing-library/react-testing-library/blob/master/src/index.js
+
+// TODO: Can we replace this with some unref(), so Jest doesn't bother?
 afterAll(() => {
   if (observer) {
     observer.disconnect();

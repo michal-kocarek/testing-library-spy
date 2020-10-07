@@ -1,16 +1,15 @@
 {
-  "XXX TODO:": "TODO: Vzit si priklad z https://github.com/testing-library/react-testing-library/blob/master/package.json",
+  "XXX TODO:": "TODO: Vzit si priklad z https://github.com/testing-library/react-testing-library/blob/master/package.json - pridat sekci keywords, files",
+  "XXX TODO2": "TODO: Prozkoumat, jakym zpusobem nastavovat optionalDependencies nebo peerDependencies na testing library",
   "workspaces": [
-    "client"
+    "client",
+    "server"
   ],
   "name": "testing-library-spy",
   "version": "0.0.0-semantically-released",
   "description": "Real-time spy on HTML rendered using Testing Library",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
-  "engines": {
-    "node": ">=10"
-  },
   "scripts": {
     "start": "ts-node ./src/test.ts"
   },
