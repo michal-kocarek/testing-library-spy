@@ -19,3 +19,5 @@ setInterval(() => {
 // TODO: Make sure that this always opens the compiled stuff directly in node.js, not in some crazy compiler
 
 // TODO: Do dependencies dat @types/* na to, co budu pouzivat ve zkompilovanych .d.ts
+
+// TODO: How to slow down stuff? child_process.execSync("sleep 5"); or using execa: https://stackoverflow.com/a/50098685

@@ -38,11 +38,14 @@ async function startServer(): Promise<{
   return { io, server };
 }
 
+// TODO: on client connected, send last known message immediately
+
 async function run() {
   const { io, server } = await startServer();
 
   process.on("message", (message) => {
     logger("Got message %o", message);
+    io.volatile.emit("spy:message", message);
   });
 }
 
