@@ -16,14 +16,13 @@ function useDebugColors() {
 
 export function start(): void {
   if (subprocess) {
-    throw new Error("Child is already started!");
+    return;
   }
 
-  // console.log('Starting subprocess at http://localhost:3888/');
-
   const SCRIPT_PATH = join(__dirname, "subprocess/index.js");
-
   const port = getPort();
+
+  logger("Starting subprocess...");
 
   subprocess = execa.node(SCRIPT_PATH, {
     env: {
@@ -31,6 +30,8 @@ export function start(): void {
       DEBUG_COLORS: useDebugColors(),
     },
   });
+
+  logger("Subprocess started.");
 
   subprocess.catch((error) => {
     console.error("Testing Library Spy subprocess exited prematurely!");
@@ -40,7 +41,7 @@ export function start(): void {
   subprocess.stdout.pipe(process.stdout);
   subprocess.stderr.pipe(process.stderr);
 
-  console.info(`Testing Live Spy is at http://localhost:${port}/`);
+  console.info(`Testing Library Spy is at http://localhost:${port}/`);
 }
 
 export function send(data: string): void {
@@ -57,6 +58,10 @@ export function kill(): void {
     return;
   }
 
+  logger("Killing subprocess...");
+
   subprocess.cancel();
   subprocess = undefined;
+
+  logger("Subprocess killed.");
 }

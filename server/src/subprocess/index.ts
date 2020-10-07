@@ -38,14 +38,24 @@ async function startServer(): Promise<{
   return { io, server };
 }
 
-// TODO: on client connected, send last known message immediately
-
 async function run() {
-  const { io, server } = await startServer();
+  const { io } = await startServer();
 
-  process.on("message", (message) => {
+  let lastMessage: string; // TODO: Type this properly
+
+  io.on("connection", (socket) => {
+    if (lastMessage === undefined) {
+      logger("New client connected, but no new message to send.");
+    } else {
+      logger("New client connected, sending last message %s", lastMessage);
+      socket.emit("spy:message", lastMessage);
+    }
+  });
+
+  process.on("message", (message: string) => {
     logger("Got message %o", message);
     io.volatile.emit("spy:message", message);
+    lastMessage = message;
   });
 }
 
