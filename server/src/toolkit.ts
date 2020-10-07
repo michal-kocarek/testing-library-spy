@@ -1,4 +1,5 @@
-import { kill, send, start } from "./src/subprocess";
+import { kill, send, start } from "./server";
+// @ts-ignore
 import { getConfig, configure, screen } from "@testing-library/react";
 import { url } from "inspector";
 
@@ -26,6 +27,8 @@ const updateContents = () => {
 
 const hookInTestingLibrary = () => {
   const { asyncWrapper, eventWrapper } = getConfig();
+  // @ts-ignore
+  // @ts-ignore
   configure({
     asyncWrapper: async (...args) => {
       try {
@@ -45,6 +48,7 @@ const hookInTestingLibrary = () => {
   });
   const oldDebug = screen.debug;
 
+  // @ts-ignore
   screen.debug = (...args) => {
     updateContents();
     oldDebug(...args);
@@ -106,11 +110,15 @@ export const initPlayground = () => {
 // TODO: How to detect afterAll/afterEach? https://github.com/testing-library/react-testing-library/blob/master/src/index.js
 
 // TODO: Can we replace this with some unref(), so Jest doesn't bother?
-afterAll(() => {
-  if (observer) {
-    observer.disconnect();
-  }
-  observer = undefined;
+// if ((afterAll !== undefined) {
+//   afterAll(() => {
+//     if (observer) {
+//       observer.disconnect();
+//     }
+//     observer = undefined;
+//
+//     kill();
+//   });
+// }
 
-  kill();
-});
+// TODO: ^ Solve this

@@ -169,7 +169,7 @@ const App: React.FC = () => {
           <>💤 Offline</>
         )}
       </div>
-      <div id="markup">{markup}</div>
+      <div id="markup" dangerouslySetInnerHTML={{ __html: markup }} />
       <div id="playground" />
     </>
   );

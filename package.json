@@ -3,6 +3,7 @@
   "XXX TODO2": "TODO: Prozkoumat, jakym zpusobem nastavovat optionalDependencies nebo peerDependencies na testing library",
   "workspaces": [
     "client",
+    "samples",
     "server"
   ],
   "name": "testing-library-spy",
