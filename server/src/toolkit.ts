@@ -1,5 +1,10 @@
 import { send, start } from "./server";
-import { getConfig, configure, screen } from "@testing-library/react";
+import {
+  getConfig,
+  configure,
+  screen,
+  prettyDOM,
+} from "@testing-library/react";
 import { url } from "inspector";
 
 let isInitialized = false;
@@ -15,7 +20,11 @@ const updateContents = () => {
     return;
   }
 
-  const html = document.body.innerHTML;
+  const html =
+    prettyDOM(document.body, undefined, {
+      highlight: false,
+    }) || "";
+
   if (oldValue === html) {
     return;
   }
