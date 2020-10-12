@@ -1,4 +1,7 @@
+import { configure } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import { initPlayground } from "testing-library-spy";
+import { initPlayground } from "../../server/dist/toolkit";
 
 initPlayground();
+
+configure({ asyncUtilTimeout: 40_000 });

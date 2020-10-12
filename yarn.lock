@@ -690,6 +690,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@testing-library/dom@npm:^7.25.0":
+  version: 7.25.0
+  resolution: "@testing-library/dom@npm:7.25.0"
+  dependencies:
+    "@babel/code-frame": ^7.10.4
+    "@babel/runtime": ^7.10.3
+    "@types/aria-query": ^4.2.0
+    aria-query: ^4.2.2
+    chalk: ^4.1.0
+    dom-accessibility-api: ^0.5.1
+    pretty-format: ^26.4.2
+  checksum: 4247ba5e38fe22d505efffa286f6655d45cd8b080391f1c112eb972246ccad8a08a3feec45c354f564c4f8a6dc14743e35594ef94336871cfb5cdf4581a0211e
+  languageName: node
+  linkType: hard
+
 "@testing-library/jest-dom@npm:^5.11.4":
   version: 5.11.4
   resolution: "@testing-library/jest-dom@npm:5.11.4"
@@ -716,6 +731,17 @@ __metadata:
     react: "*"
     react-dom: "*"
   checksum: 3662df0d284b4ad0701aa86ec396652280357cccf22935c6bde02fbb9a08125c216a43c4960b188e6403f053bfa68a680d934a9ea90ff92312e16e57d6eaa986
+  languageName: node
+  linkType: hard
+
+"@testing-library/user-event@npm:^12.1.7":
+  version: 12.1.7
+  resolution: "@testing-library/user-event@npm:12.1.7"
+  dependencies:
+    "@babel/runtime": ^7.10.2
+  peerDependencies:
+    "@testing-library/dom": ">=7.21.4"
+  checksum: b0a855a5a0c991a9b1e1cd1b1adfc73b54ad10b2baba7f157ca66eb55ad418aa420e1e98af8d5a33dcf62942fb08dea6030986858954d1a5990c648bd7edbadc
   languageName: node
   linkType: hard
 
@@ -8900,8 +8926,10 @@ fsevents@^1.2.7:
   version: 0.0.0-use.local
   resolution: "testing-library-spy~samples@workspace:samples"
   dependencies:
+    "@testing-library/dom": ^7.25.0
     "@testing-library/jest-dom": ^5.11.4
     "@testing-library/react": ^11.0.4
+    "@testing-library/user-event": ^12.1.7
     "@types/jest": ^26.0.14
     "@types/react": ^16.9.51
     "@types/react-dom": ^16.9.8
