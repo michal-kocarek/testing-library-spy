@@ -1,5 +1,4 @@
 import "@testing-library/jest-dom";
-
-import { initPlayground } from "../../server/dist/toolkit";
+import { initPlayground } from "testing-library-spy";
 
 initPlayground();

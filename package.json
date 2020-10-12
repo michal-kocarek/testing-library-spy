@@ -8,9 +8,9 @@
   ],
   "name": "testing-library-spy",
   "version": "0.0.0-semantically-released",
-  "description": "Real-time spy on HTML rendered using Testing Library",
-  "main": "dist/index.js",
-  "types": "types/index.d.ts",
+  "description": "Real-time spying of HTML rendered by Testing Library",
+  "main": "server/dist/toolkit.js",
+  "types": "server/dist/toolkit.d.ts",
   "scripts": {
     "start": "ts-node ./src/test.ts",
     "build": "yarn workspace testing-library-spy~client run build && yarn workspace testing-library-spy~server run build"
