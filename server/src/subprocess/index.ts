@@ -5,6 +5,7 @@ import { join } from "path";
 import socketIo, { Server as SocketIoServer } from "socket.io";
 
 import { getPort } from "./utils";
+import { ClientServerMessageType } from "../types";
 
 const logger = debug("testing-library-spy:subprocess");
 
@@ -41,7 +42,7 @@ async function startServer(): Promise<{
 async function run() {
   const { io } = await startServer();
 
-  let lastMessage: string; // TODO: Type this properly
+  let lastMessage: ClientServerMessageType;
 
   io.on("connection", (socket) => {
     if (lastMessage === undefined) {

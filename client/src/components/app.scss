@@ -1,0 +1,29 @@
+.app__markup {
+    position: absolute;
+    top: 5.5rem;
+    left: 0;
+    margin-top: 0;
+    height: calc(100% - 5.5rem);
+    width: 100%;
+  }
+
+.app__preview__connection-state {
+  margin: 0px -.5rem;
+  padding: 0 .5rem;
+  border-radius: .75rem;
+  font-size: 1rem;
+  text-transform: uppercase;
+
+  background: #303848;
+  color: #ffffff;
+}
+
+.app__preview__selection {
+  span {
+    display: inline-block;
+  }
+
+  button {
+
+  }
+}

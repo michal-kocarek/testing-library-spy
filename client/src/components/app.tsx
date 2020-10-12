@@ -1,127 +1,27 @@
 import React, { useEffect, useState } from "react";
 import socketIoClient from "socket.io-client";
 
-import "./app.css";
+import {
+  ClientServerMessageName,
+  ClientServerMessageType,
+} from "../../../server/src/types";
 
-// @ts-ignore
+import StaticMarkup from "./staticMarkup";
+import PlaygroundMarkup from "./playgroundMarkup";
+
 import faviconOnline from "../assets/favicon-online.png";
-// @ts-ignore
 import faviconOffline from "../assets/favicon-offline.png";
 
-// const setStatus = (status: string) => {
-//   @ts-ignore
-//   document.getElementById("status").innerText = status;
-// };
-//
-// const toggle = (online: boolean) => {
-//   const link = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
-//   if (!link) {
-//     throw new Error("Link element was not found.");
-//   }
-//
-//   link.setAttribute("href", online ? faviconOnline : faviconOffline);
-// };
-//
-// let lastData: string | undefined;
-//
-// /**
-//  * @type {string}
-//  */
-// const title = document.title;
-//
-//
-//   document.addEventListener("DOMContentLoaded", () => {
-//     const poll = async (nopoll = false) => {
-//       toggle(true);
-//
-//       let response;
-//       try {
-//         response = await fetch("/data", {
-//           method: "POST",
-//           headers: {
-//             "Content-Type": "application/json",
-//           },
-//           body: JSON.stringify(nopoll ? { nopoll: true } : {}),
-//         });
-//       } catch (e) {
-//         toggle(false);
-//         setStatus("🛑 Disconnected!");
-//
-//         if (!(e instanceof TypeError)) {
-//           console.error(e);
-//         }
-//
-//         retryFail();
-//         return;
-//       }
-//
-//       if (!response.ok) {
-//         toggle(false);
-//         setStatus("🛑 Received non-OK response!");
-//
-//         console.error("Response not ok!");
-//
-//         retryFail();
-//         return;
-//       }
-//
-//       setStatus(`💡 Alive`);
-//
-//       const jsonResponse = await response.json();
-//
-//       if (jsonResponse.data) {
-//         const { data } = jsonResponse;
-//         if (lastData !== data) {
-//           lastData = data;
-//
-//           const previousScript = document.getElementById("playground-script");
-//           if (previousScript) {
-//             previousScript.remove();
-//           }
-//
-//           // @ts-ignore
-//           document.getElementById("markup").innerHTML = data;
-//           // @ts-ignore
-//           document.getElementById("playground").innerHTML =
-//             `
-//               <template data-testing-playground data-height="500">
-//                 <script type="text/html"><div>${data}</div><` +
-//             `/script>
-//
-//                 <script type="text/javascript">screen.getByRole('button')<` +
-//             `/script>
-//               </template>
-//             `;
-//
-//           // @ts-ignore
-//           document.querySelector("head").appendChild(
-//             (() => {
-//               const script = document.createElement("script");
-//               script.id = "playground-script";
-//               script.async = true;
-//               script.src = "https://testing-playground.com/embed.js";
-//
-//               return script;
-//             })()
-//           );
-//         }
-//       }
-//
-//       poll();
-//     };
-//
-//     const retryFail = () => {
-//       setTimeout(() => {
-//         poll(true);
-//       }, 5000);
-//     };
-//
-//     poll(true);
-//   });
+import "./app.scss";
 
 enum ConnectionState {
   OFFLINE,
   ONLINE,
+}
+
+enum RenderSetting {
+  PLAYGROUND = "playground",
+  STATIC = "static",
 }
 
 const App: React.FC = () => {
@@ -131,15 +31,38 @@ const App: React.FC = () => {
 
   const [markup, setMarkup] = useState("");
 
+  const [renderSetting, setRenderSetting] = useState<RenderSetting | undefined>(
+    undefined
+  );
+
+  useEffect(() => {
+    const LOCAL_STORAGE_KEY = "testing-library-spy-render-setting";
+    if (renderSetting === undefined) {
+      const savedRenderSetting = window.localStorage.getItem(LOCAL_STORAGE_KEY);
+
+      if (
+        savedRenderSetting &&
+        Object.values(RenderSetting).includes(
+          savedRenderSetting as RenderSetting
+        )
+      ) {
+        setRenderSetting(savedRenderSetting as RenderSetting);
+      } else {
+        setRenderSetting(RenderSetting.PLAYGROUND);
+      }
+    } else {
+      window.localStorage.setItem(LOCAL_STORAGE_KEY, renderSetting);
+    }
+  }, [renderSetting, setRenderSetting]);
+
   useEffect(() => {
     const socket = socketIoClient();
 
     socket.on("connect", () => setConnectionState(ConnectionState.ONLINE));
     socket.on("disconnect", () => setConnectionState(ConnectionState.OFFLINE));
 
-    // TODO: Extract spy:message somewhere, and type the message
-    socket.on("spy:message", (message: string) => {
-      console.log("Received message", message);
+    socket.on(ClientServerMessageName, (message: ClientServerMessageType) => {
+      // console.log("Received message", message);
       setMarkup(message);
     });
 
@@ -149,7 +72,9 @@ const App: React.FC = () => {
   }, [setConnectionState, setMarkup]);
 
   useEffect(() => {
-    const link = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
+    const link = document.head.querySelector<HTMLLinkElement>(
+      'link[rel="icon"]'
+    );
     if (!link) {
       throw new Error("Could not find favicon element");
     }
@@ -160,17 +85,66 @@ const App: React.FC = () => {
         : faviconOffline;
   }, [connectionState]);
 
+  const handleRenderSettingClick: React.ChangeEventHandler<HTMLInputElement> = (
+    e
+  ) => {
+    setRenderSetting(e.currentTarget.value as RenderSetting);
+  };
+
   return (
     <>
-      <div id="status">
-        {connectionState === ConnectionState.ONLINE ? (
-          <>💡 Alive</>
+      <header>
+        <h1>
+          <a href=".">Testing Library Spy</a>
+        </h1>
+        <ul>
+          <li className="app__preview__connection-state">
+            {connectionState === ConnectionState.ONLINE ? (
+              <>💡 Alive</>
+            ) : (
+              <>💤 Offline</>
+            )}
+          </li>
+          <li className="app__preview__selection">
+            <span>Render in:</span>
+            <label>
+              <input
+                type="radio"
+                name="render"
+                value={RenderSetting.PLAYGROUND}
+                checked={renderSetting === RenderSetting.PLAYGROUND}
+                onChange={handleRenderSettingClick}
+              />
+              Testing Playground
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="render"
+                value={RenderSetting.STATIC}
+                checked={renderSetting === RenderSetting.STATIC}
+                onChange={handleRenderSettingClick}
+              />
+              Offline
+            </label>
+          </li>
+          <li>
+            <a
+              href="https://github.com/michal-kocarek/testing-library-spy"
+              target="_blank"
+            >
+              Documentation
+            </a>
+          </li>
+        </ul>
+      </header>
+      <section className="app__markup">
+        {renderSetting === RenderSetting.PLAYGROUND ? (
+          <PlaygroundMarkup markup={markup} />
         ) : (
-          <>💤 Offline</>
+          <StaticMarkup markup={markup} />
         )}
-      </div>
-      <div id="markup" dangerouslySetInnerHTML={{ __html: markup }} />
-      <div id="playground" />
+      </section>
     </>
   );
 };

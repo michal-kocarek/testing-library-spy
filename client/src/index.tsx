@@ -3,7 +3,7 @@ import React from "react";
 
 import App from "./components/app";
 
-import "./index.css";
+import "./index.scss";
 
 document.addEventListener("DOMContentLoaded", () => {
   const div = document.createElement("div");

@@ -36,8 +36,12 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
-        test: /\.css$/,
-        use: [require.resolve("style-loader"), require.resolve("css-loader")],
+        test: /\.s[ac]ss$/,
+        use: [
+          require.resolve("style-loader"),
+          require.resolve("css-loader"),
+          require.resolve("sass-loader"),
+        ],
       },
       {
         test: /\.(png|svg|jpg|gif)$/,
