@@ -2,7 +2,7 @@
   "name": "testing-library-spy~client",
   "private": true,
   "scripts": {
-    "build": "webpack --mode=development"
+    "build": "webpack --mode=production"
   },
   "dependencies": {
     "react": "^16.13.1",
