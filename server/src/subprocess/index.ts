@@ -4,8 +4,9 @@ import { createServer, Server as HttpServer } from "http";
 import { join } from "path";
 import socketIo, { Server as SocketIoServer } from "socket.io";
 
+import { ClientServerMessageType, SubprocessMessageType } from "../types";
+
 import { getPort } from "./utils";
-import { ClientServerMessageType } from "../types";
 
 const logger = debug("testing-library-spy:subprocess");
 
@@ -53,7 +54,7 @@ async function run() {
     }
   });
 
-  process.on("message", (message: string) => {
+  process.on("message", (message: SubprocessMessageType) => {
     logger("Got message %o", message);
     io.volatile.emit("spy:message", message);
     lastMessage = message;

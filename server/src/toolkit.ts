@@ -1,5 +1,4 @@
-import { kill, send, start } from "./server";
-// @ts-ignore
+import { send, start } from "./server";
 import { getConfig, configure, screen } from "@testing-library/react";
 import { url } from "inspector";
 
@@ -27,8 +26,6 @@ const updateContents = () => {
 
 const hookInTestingLibrary = () => {
   const { asyncWrapper, eventWrapper } = getConfig();
-  // @ts-ignore
-  // @ts-ignore
   configure({
     asyncWrapper: async (...args) => {
       try {
@@ -39,7 +36,7 @@ const hookInTestingLibrary = () => {
     },
     eventWrapper: async (...args) => {
       try {
-        const element = args[0];
+        // const element = args[0];
         return await eventWrapper(...args);
       } finally {
         updateContents();
@@ -48,7 +45,6 @@ const hookInTestingLibrary = () => {
   });
   const oldDebug = screen.debug;
 
-  // @ts-ignore
   screen.debug = (...args) => {
     updateContents();
     oldDebug(...args);
@@ -72,15 +68,19 @@ const hookToDom = () => {
   });
 };
 
-const enable = () =>
-  !!(
-    // Enable by ENV variable?
-    (
-      process.env.LIVE_PLAYGROUND_ENABLE === "true" ||
-      // Or when Node.js debugger is active?
-      url()
-    )
-  );
+const enable = () => {
+  // Enable by ENV variable?
+  if (process.env.LIVE_PLAYGROUND_ENABLE === "true") {
+    return true;
+  }
+
+  // Or when Node.js debugger is active?
+  if (url()) {
+    return true;
+  }
+
+  return false;
+};
 
 // TODO: Rename this to something like testing-library-spy
 // TODO: Just dump out HTML nicely, with info about running test and connection status. And add link to download this package and the chrome extension

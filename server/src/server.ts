@@ -1,13 +1,19 @@
 import execa, { ExecaChildProcess } from "execa";
-import { join } from "path";
-import { getPort } from "./subprocess/utils";
 import debug from "debug";
+import { join } from "path";
 
-let subprocess: ExecaChildProcess | undefined;
+import { SubprocessMessageType } from "./types";
+
+import { getPort } from "./subprocess/utils";
 
 const logger = debug("testing-library-spy");
 
-function useDebugColors() {
+let subprocess: ExecaChildProcess | undefined;
+
+/**
+ * Subprocess won't be able to find out whether it's running inside TTY, so we need to manually pass down the setting.
+ */
+function useDebugColors(): "yes" | undefined {
   // Leverage undocumented debug function
   const useColors = (debug as { useColors?: () => boolean }).useColors;
 
@@ -44,7 +50,7 @@ export function start(): void {
   console.info(`Testing Library Spy is at http://localhost:${port}/`);
 }
 
-export function send(data: string): void {
+export function send(data: SubprocessMessageType): void {
   if (!subprocess) {
     throw new Error("Testing Library Spy subprocess is not ready yet!");
   }
