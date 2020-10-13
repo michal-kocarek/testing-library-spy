@@ -95,7 +95,7 @@ const enable = () => {
 // TODO: Just dump out HTML nicely, with info about running test and connection status. And add link to download this package and the chrome extension
 
 // TODO: Add here options object, with possibility to patch global object and/or screen.debug() or something to call notifyPlayground()...
-export const initPlayground = () => {
+export const initSpyConsole = () => {
   if (!enable()) {
     return;
   }
