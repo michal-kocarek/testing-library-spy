@@ -13,7 +13,7 @@ and stepping between Testing Library commands & DOM updates.
 This module is distributed via [npm](https://www.npmjs.com) and should be installed as one of your project's `devDependencies`:
 
 ```shell
-npm install --save-dev testing-library-spy```
+npm install --save-dev testing-library-spy
 ```
 
 or for installation via [yarn](https://yarnpkg.com/)
