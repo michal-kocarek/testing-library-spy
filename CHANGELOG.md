@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.3] - 2020-10-13
+
+### Fixed
+
+- Close open handle to subprocess after test execution
+
 ## [0.0.2] - 2020-10-13
 
 ### Fixed
