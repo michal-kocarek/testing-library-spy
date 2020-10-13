@@ -2,7 +2,7 @@
 
 Real-time spying of HTML rendered by [Testing Library](https://testing-library.com/).
 
-// TODO: Put an image here
+![Preview of the functionality](docs/teaser.gif)
 
 Testing Library Spy is useful when writing and debugging tests that leverage Testing Library
 to render the HTML. It enables you to see currently rendered HTML while debugging the test
